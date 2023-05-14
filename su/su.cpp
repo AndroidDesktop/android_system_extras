@@ -115,7 +115,12 @@ int main(int argc, char** argv) {
     if (setuid(uid)) error(1, errno, "setuid failed");
 
     // Reset parts of the environment.
-    setenv("PATH", _PATH_DEFPATH, 1);
+    char* pathenv = getenv("PATH");
+    char buf[512];
+    strcpy(buf,pathenv);
+    strcat(buf,":");
+    strcat(buf, _PATH_DEFPATH);
+    setenv("PATH", buf, 1);
     unsetenv("IFS");
     struct passwd* pw = getpwuid(uid);
     if (pw) {
